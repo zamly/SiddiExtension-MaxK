@@ -22,14 +22,14 @@ public class MaxKTimeTransformerTest {
     protected long start;
     protected long end;
 
-    //@AfterClass
+    @AfterClass
     public static void tearDown() throws Exception {
         Thread.sleep(1000);
         logger.info("Shutting down Siddhi");
         siddhiManager.shutdown();
     }
 
-    //@Test
+    @Test
     public void test() throws Exception {
         logger.info("Testing");
 
@@ -82,14 +82,14 @@ public class MaxKTimeTransformerTest {
         }
     }
 
-    //@Before
+    @Before
     public void setUp() throws Exception {
         logger.info("Initializing Siddhi setUp");
 
         SiddhiConfiguration siddhiConfiguration = new SiddhiConfiguration();
 
         List<Class> extensions = new ArrayList<Class>();
-        extensions.add(MaxKTimeTransformerTest.class);
+        extensions.add(MaxKTimeTransformer.class);
 
         siddhiConfiguration.setSiddhiExtensions(extensions);
 
@@ -104,7 +104,7 @@ public class MaxKTimeTransformerTest {
         data.add(new Object[]{"sensorZ", 167.8945, 4562949L});
         data.add(new Object[]{"sensorZ", 198.8945, 4562957L});
         data.add(new Object[]{"sensorZ", 165.8945, 4562948L});
-        data.add(new Object[]{"sensorZ", 167.8945, 4562949L});
+        data.add(new Object[]{"sensorZ", 167.8945, 4562000L});
         data.add(new Object[]{"sensorZ", 179.8945, 4562960L});
         data.add(new Object[]{"sensorZ", 184.8945, 4562961L});
         data.add(new Object[]{"sensorZ", 151.8945, 4562963L});
