@@ -14,4 +14,3 @@ This is how to use the extension in a query:
   select *
   insert into outStream;
 
-NOTE : copy the source to <CEP_HOME>/samples/producers/ and build the extension.
