@@ -13,3 +13,5 @@ This is how to use the extension in a query:
   from inputStream#transform.debs:getVelocities(value, date, K, time) 
   select *
   insert into outStream;
+
+NOTE : copy the source to <CEP_HOME>/samples/producers/ and build the extension.
