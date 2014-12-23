@@ -65,13 +65,12 @@ public class MaxKTimeTransformer extends TransformProcessor {
     private static int count = 0;
     private MaxKStore maxKStore = null;
 
-
     @Override
     protected InStream processEvent(InEvent inEvent) {
         if (debugEnabled) {
             LOGGER.debug("Processing a new Event for TopK Determination, Event : " + inEvent);
         }
-        doProcessing(inEvent);
+        processEventForMaxK(inEvent);
         return new InEvent(inEvent.getStreamId(), System.currentTimeMillis(), data);
     }
 
@@ -88,25 +87,39 @@ public class MaxKTimeTransformer extends TransformProcessor {
 
     @Override
     protected Object[] currentState() {
-        return new Object[]{paramPositions};
+        return new Object[]{value,valuePosition,date,datePosition,capacity,resetTimeRate,maxKStore};
     }
 
     @Override
     protected void restoreState(Object[] objects) {
-        if (objects.length > 0 && objects[0] instanceof Map) {
-            paramPositions = (Map<String, Integer>) objects[0];
+        if ((objects.length == 7) &&
+                (objects[0] instanceof String) && (objects[1] instanceof Integer) &&
+                (objects[2] instanceof String) && (objects[3] instanceof Integer) &&
+                (objects[4] instanceof Integer) &&
+                (objects[5] instanceof Integer) &&
+                (objects[6] instanceof MaxKStore) ) {
+
+            this.value = (String) objects[0];
+            this.valuePosition = (Integer) objects[1];
+            this.date = (String) objects[2];
+            this.datePosition = (Integer) objects[3];
+            this.capacity = (Integer) objects[4];
+            this.resetTimeRate = (Integer) objects[5];
+            this.maxKStore = (MaxKStore) objects[6];
+
+        } else {
+            LOGGER.error("Failed in restoring the Max-K Transformer.");
         }
     }
 
     @Override
     protected void init(Expression[] expressions,
                         List<ExpressionExecutor> expressionExecutors,
-                        StreamDefinition streamDefinition,
-                        StreamDefinition streamDefinition2,
-                        String s,
+                        StreamDefinition inStreamDefinition,
+                        StreamDefinition outStreamDefinition,
+                        String elementId,
                         SiddhiContext siddhiContext) {
 
-        //count ++;
         debugEnabled = LOGGER.isDebugEnabled();
 
         if (expressions.length != 4) {
@@ -135,8 +148,9 @@ public class MaxKTimeTransformer extends TransformProcessor {
 
         //If the reset time is grater than zero, then starting the ScheduledExecutorService instance that will schedule resetting stream-lib connector.
         if (resetTimeRate > 0) {
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.scheduleAtFixedRate(executorTask, 0, resetTimeRate, TimeUnit.MINUTES);
+            siddhiContext.getScheduledExecutorService().scheduleAtFixedRate(executorTask, 0, resetTimeRate, TimeUnit.SECONDS);
+            //ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            //scheduler.scheduleAtFixedRate(executorTask, 0, resetTimeRate, TimeUnit.SECONDS);
         }
 
     }
@@ -146,16 +160,14 @@ public class MaxKTimeTransformer extends TransformProcessor {
 
     }
 
-    private void doProcessing(InEvent event) {
+    private void processEventForMaxK(InEvent event) {
 
         Object eventKeyValue = event.getData(valuePosition);
         Object eventKeyDate = event.getData(datePosition);
 
         Map<Double, Long> currentTopK = new HashMap<Double, Long>(count);
 
-        synchronized (this) {
-            currentTopK = maxKStore.getMaxK((Double)eventKeyValue, (Long)eventKeyDate);
-        }
+        currentTopK = maxKStore.getMaxK((Double)eventKeyValue, (Long)eventKeyDate);
 
         int currentTopKSize = currentTopK.size();
 
@@ -186,6 +198,7 @@ public class MaxKTimeTransformer extends TransformProcessor {
     private Runnable executorTask = new Runnable() {
         @Override
         public void run() {
+
             maxKStore = new MaxKStore(capacity);
         }
     };

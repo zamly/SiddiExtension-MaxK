@@ -18,7 +18,6 @@
 
 package org.wso2.siddi.util;
 
-
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +26,7 @@ import java.util.TreeMap;
 public class MaxKStore {
 
     //Holds the Max K readings
-    private Map<Double, Long> maxKUnits;
+    private Map<Double, Long> maxKUnits = new TreeMap<Double, Long>();
     //No of data to be held in the Map: The value of K
     private int dataToHold = 0;
 
@@ -45,30 +44,27 @@ public class MaxKStore {
      * @params date - The timestamp the pressure reading was produced.
      *
      */
-    public Map<Double, Long> getMaxK(double value, long date) {
+    public synchronized Map<Double, Long> getMaxK(double value, long date) {
 
-        // Holds pressure readings that are sorted in descending order according to the key (pressure value).
-        Map<Double, Long> currentMax = new TreeMap<Double, Long>(maxKUnits).descendingMap();
+        if (maxKUnits.size() < dataToHold) {
 
-        if (currentMax.size() < dataToHold) {
+            maxKUnits.put(value, date);
 
-            currentMax.put(value, date);
+        } else if (maxKUnits.size() == dataToHold) {
 
-        } else if (currentMax.size() == dataToHold) {
+            double minKey = Collections.min(maxKUnits.keySet());
 
-            double minkey = Collections.min(currentMax.keySet());
-
-            if (minkey < value) {
-                Object firstEvent = currentMax.remove(minkey);
-                currentMax.put(value, date);
-            }else if (minkey == value) {
+            if (minKey < value) {
+                Object firstEvent = maxKUnits.remove(minKey);
+                maxKUnits.put(value, date);
+            }else if (minKey == value) {
                 // if same pressure reading exist in the Map, updates the new value with updated timestamp.
-                currentMax.put(value, date);
+                maxKUnits.put(value, date);
             }
 
         }
 
-        maxKUnits = currentMax;
-        return currentMax;
+        // Returns the pressure readings that are sorted in descending order according to the key (pressure value).
+        return new TreeMap<Double, Long>(maxKUnits).descendingMap();
     }
 }

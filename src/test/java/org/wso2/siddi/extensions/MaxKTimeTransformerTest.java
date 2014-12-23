@@ -1,5 +1,21 @@
+/*
+*  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
 package org.wso2.siddi.extensions;
-
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -36,8 +52,8 @@ public class MaxKTimeTransformerTest {
         start = System.currentTimeMillis();
 
         String eventFuseExecutionPlan =
-                "from pressureStream#transform.MaxK:getMaxK(value, date, 10, 1) \n" +
-                        "select * \n" +
+                "from pressureStream#transform.MaxK:getMaxK(value, date, 10, 30) \n" +
+                        "select * output last every 30 sec\n" +
                         "insert into topKStream;";
 
 
@@ -111,7 +127,64 @@ public class MaxKTimeTransformerTest {
         data.add(new Object[]{"sensorZ", 165.8945, 4562964L});
         data.add(new Object[]{"sensorZ", 182.8945, 4562967L});
         data.add(new Object[]{"sensorZ", 193.8945, 4562970L});
-        data.add(new Object[]{"sensorZ", 199.9945, 4562989L});
-
+        data.add(new Object[]{"sensorZ", 194.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 190.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 196.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 184.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 182.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 181.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 188.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 187.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 185.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 156.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 179.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 177.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 166.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 168.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 169.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 159.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 199.9999, 4562989L});
+        data.add(new Object[]{"sensorZ", 195.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 184.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 182.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 190.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 175.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 162.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 161.9945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 198.22222, 4562000L});
+        data.add(new Object[]{"sensorZ", 198.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 199.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4561000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562000L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4562989L});
+        data.add(new Object[]{"sensorZ", 154.23945, 4563000L});
     }
 }
